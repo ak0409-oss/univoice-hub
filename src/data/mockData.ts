@@ -11,21 +11,24 @@ export const initialHostels: Hostel[] = [
 
 export const initialUsers: User[] = [
   // Admin
-  { id: "u0", email: "12345@kiit.ac.in", name: "Super Admin", password: "123456", role: UserRole.ADMIN },
-  { id: "u0b", email: "admin@kiit.ac.in", name: "Super Admin", password: "12345", role: UserRole.ADMIN },
+  { id: "u0", email: "admin@kiit.ac.in", name: "Super Admin", password: "12345", role: UserRole.ADMIN },
+
   // Wardens
-  { id: "w1", email: "warden1@gmail.com", name: "Warden Name 1", password: "12345", role: UserRole.WARDEN, hostelId: "h1" },
+  { id: "w1", email: "warden@kiit.ac.in", name: "Warden", password: "12345", role: UserRole.WARDEN, hostelId: "h1" },
   { id: "w2", email: "warden2@gmail.com", name: "Warden Name 2", password: "12345", role: UserRole.WARDEN, hostelId: "h2" },
   { id: "w3", email: "warden3@gmail.com", name: "Warden Name 3", password: "12345", role: UserRole.WARDEN, hostelId: "h3" },
   { id: "w4", email: "warden4@gmail.com", name: "Warden Name 4", password: "12345", role: UserRole.WARDEN, hostelId: "h4" },
   { id: "w5", email: "warden5@gmail.com", name: "Warden Name 5", password: "12345", role: UserRole.WARDEN },
+
   // Mentors
-  { id: "m1", email: "mentor1@gmail.com", name: "Mentor Name 1", password: "12345", role: UserRole.MENTOR },
+  { id: "m1", email: "mentor@kiit.ac.in", name: "Mentor", password: "12345", role: UserRole.MENTOR },
   { id: "m2", email: "mentor2@gmail.com", name: "Mentor Name 2", password: "12345", role: UserRole.MENTOR },
   { id: "m3", email: "mentor3@gmail.com", name: "Mentor Name 3", password: "12345", role: UserRole.MENTOR },
   { id: "m4", email: "mentor4@gmail.com", name: "Mentor Name 4", password: "12345", role: UserRole.MENTOR },
   { id: "m5", email: "mentor5@gmail.com", name: "Mentor Name 5", password: "12345", role: UserRole.MENTOR },
+
   // Students
+  { id: "s0", email: "student@kiit.ac.in", name: "Student", password: "12345", role: UserRole.STUDENT, hostelId: "h1", mentorId: "m1", roomNumber: "101" },
   ...Array.from({ length: 20 }, (_, i) => {
     const names = [
       "Aarav Sharma", "Vivaan Gupta", "Aditya Patel", "Vihaan Singh", "Arjun Verma",
