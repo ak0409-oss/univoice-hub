@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Student Dashboard</h2>
+<p>Room: {{ current_user.room_number if current_user.room_number else 'Not Assigned' }} | Hostel: {{ current_user.hostel.name if current_user.hostel else 'Not Assigned' }}</p>
+
+<div style="display: flex; gap: 30px;">
+    
+    <div style="flex: 1; border: 1px solid #ccc; padding: 20px;">
+        <h3>File a Complaint</h3>
+        <form method="POST">
+            <label>Category:</label>
+            <select name="category" required>
+                {% for cat in Category %}
+                    <option value="{{ cat.value }}">{{ cat.value|upper }}</option>
+                {% endfor %}
+            </select>
+
+            <label>Heading:</label>
+            <input type="text" name="heading" placeholder="e.g., Fan not working" required style="width: 100%;">
+
+            <label>Description:</label>
+            <textarea name="description" rows="5" required style="width: 100%;"></textarea>
+
+            <button type="submit" style="margin-top: 10px;">Submit Complaint</button>
+        </form>
+    </div>
+
+    <div style="flex: 1; border: 1px solid #ccc; padding: 20px;">
+        <h3>My Complaints</h3>
+        {% if not complaints %}
+            <p>No complaints filed yet.</p>
+        {% else %}
+            <ul>
+                {% for c in complaints %}
+                    <li style="margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                        <strong>{{ c.heading }}</strong> <small>({{ c.created_at.strftime('%Y-%m-%d') }})</small><br>
+                        Status: 
+                        <span style="
+                            {% if c.status.value == 'pending' %}color: orange;
+                            {% elif c.status.value == 'resolved' %}color: green;
+                            {% elif c.status.value == 'rejected' %}color: red;
+                            {% endif %}
+                        ">
+                            {{ c.status.value|upper }}
+                        </span>
+                        <br>
+                        <small>{{ c.description }}</small>
+                        {% if c.warden_comment %}
+                            <br><small style="color: blue;">Warden: {{ c.warden_comment }}</small>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

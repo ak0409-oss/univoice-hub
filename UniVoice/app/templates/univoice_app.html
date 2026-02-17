@@ -1,0 +1,1982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniVoice - Hostel Management System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+            display: flex;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #4f46e5 0%, #6366f1 100%);
+            color: white;
+            padding: 2rem 1.5rem;
+            min-height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-logo {
+            font-size: 1.5em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .sidebar-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            border: none;
+            font-size: 1em;
+            font-weight: 500;
+        }
+
+        .sidebar-nav-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .sidebar-nav-item.active {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            border-left: 3px solid white;
+        }
+
+        .sidebar-nav-item-icon {
+            font-size: 1.25em;
+        }
+
+        .sidebar-footer {
+            position: absolute;
+            bottom: 2rem;
+            left: 1.5rem;
+            right: 1.5rem;
+        }
+
+        .sidebar-logout {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            border-radius: 8px;
+            background: rgba(239, 68, 68, 0.2);
+            color: #fecaca;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .sidebar-logout:hover {
+            background: rgba(239, 68, 68, 0.3);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            width: calc(100% - 280px);
+        }
+
+        /* Top Bar */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .topbar-title {
+            font-size: 2em;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .topbar-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-profile-info {
+            text-align: right;
+            font-size: 0.9em;
+        }
+
+        .user-profile-name {
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .user-profile-meta {
+            color: #7f8c8d;
+            font-size: 0.85em;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2em;
+        }
+
+        /* Flash Messages */
+        .flash-messages {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            max-width: 400px;
+        }
+
+        .flash {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .flash.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .flash.danger {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .flash.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+
+        /* Main Container */
+        .container {
+            width: 100%;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Stat Cards Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stat-card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            flex-shrink: 0;
+        }
+
+        .stat-card-icon.blue {
+            background: #e0e7ff;
+        }
+
+        .stat-card-icon.orange {
+            background: #fed7aa;
+        }
+
+        .stat-card-icon.green {
+            background: #dcfce7;
+        }
+
+        .stat-card-content h3 {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card-content .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        /* Complaint Cards Grid */
+        .complaints-section {
+            margin-bottom: 2rem;
+        }
+
+        .complaints-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .complaints-section-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .complaints-section-subtitle {
+            color: #7f8c8d;
+            font-size: 0.95em;
+        }
+
+        .complaints-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .complaint-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s;
+            border: 1px solid #e8eef2;
+        }
+
+        .complaint-card:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .complaint-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .complaint-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            background: #f0f3ff;
+        }
+
+        .complaint-card-icon.plumbing {
+            background: #fef3c7;
+        }
+
+        .complaint-card-icon.electrical {
+            background: #fecaca;
+        }
+
+        .complaint-card-icon.internet {
+            background: #d1fae5;
+        }
+
+        .complaint-card-icon.mess {
+            background: #fed7aa;
+        }
+
+        .complaint-card-status {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .complaint-card-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.25rem;
+        }
+
+        .complaint-card-meta {
+            font-size: 0.85em;
+            color: #7f8c8d;
+            margin-bottom: 1rem;
+        }
+
+        .complaint-card-description {
+            color: #34495e;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+            font-size: 0.95em;
+        }
+
+        .complaint-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid #e8eef2;
+        }
+
+        .priority-text {
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .priority-high {
+            color: #dc2626;
+        }
+
+        .priority-medium {
+            color: #f59e0b;
+        }
+
+        .priority-low {
+            color: #16a34a;
+        }
+
+        .view-details-link {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .view-details-link:hover {
+            color: #4338ca;
+        }
+
+        /* AI Assistant Section */
+        .ai-assistant-section {
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);
+        }
+
+        .ai-assistant-content h3 {
+            font-size: 1.5em;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ai-assistant-content p {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 0;
+            font-size: 0.95em;
+        }
+
+        .btn-ai {
+            background: white;
+            color: #4f46e5;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .btn-ai:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Login Page */
+        .login-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+        }
+
+        .login-container {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-title {
+            text-align: center;
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .login-subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 2rem;
+            font-size: 0.95em;
+        }
+
+        .login-divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            color: #95a5a6;
+            font-size: 0.9em;
+        }
+
+        .login-divider::before,
+        .login-divider::after {
+            content: '';
+            display: inline-block;
+            width: 30%;
+            height: 1px;
+            background: #bdc3c7;
+            margin: 0 0.5rem;
+            vertical-align: middle;
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #2c3e50;
+            font-size: 0.95em;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1em;
+            transition: all 0.3s;
+            background: #f9fafb;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4f46e5;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+            font-size: 1em;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-google {
+            background: #DB4437;
+            color: white;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .btn-google:hover {
+            background: #c23321;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #2c3e50;
+        }
+
+        .btn-secondary:hover {
+            background: #d1d5db;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.85em;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        /* Admin Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border: 2px solid transparent;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            border-color: #4f46e5;
+        }
+
+        .dashboard-card-icon {
+            font-size: 2.5em;
+            margin-bottom: 1rem;
+        }
+
+        .dashboard-card-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        /* Split Layout for Management Pages */
+        .split-layout {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .split-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Tables */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #ecf0f1;
+            border-bottom: 2px solid #bdc3c7;
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Form Panel */
+        .form-panel {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 100px;
+        }
+
+        .form-panel-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        /* Dropdown Filter */
+        .filter-section {
+            background: white;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .filter-section label {
+            font-weight: 600;
+            margin-right: 1rem;
+            color: #2c3e50;
+        }
+
+        .filter-section select {
+            padding: 0.5rem 1rem;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-family: inherit;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .badge-high {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge-medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-low {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        /* Profile Section */
+        .profile-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-field {
+            margin-bottom: 1rem;
+        }
+
+        .profile-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .profile-value {
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        /* Flagged Section */
+        .flagged-section {
+            background: #fff5f5;
+            border: 2px solid #e74c3c;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .flagged-title {
+            color: #c0392b;
+            font-weight: 700;
+            font-size: 1.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .flagged-message {
+            color: #721c24;
+        }
+
+        /* Complaint Card */
+        .complaint-card {
+            background: white;
+            border: 1px solid #ecf0f1;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .complaint-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: #3498db;
+        }
+
+        .complaint-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .complaint-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .complaint-meta {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+
+        .complaint-description {
+            margin-bottom: 1rem;
+            color: #34495e;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-close {
+            float: right;
+            font-size: 1.5em;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: #95a5a6;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            border-bottom: 2px solid #ecf0f1;
+            margin-bottom: 1.5rem;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 1rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: #95a5a6;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab-button.active {
+            color: #3498db;
+            border-bottom-color: #3498db;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #95a5a6;
+        }
+
+        .empty-state-icon {
+            font-size: 3em;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state-text {
+            font-size: 1.1em;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8em;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-info {
+            background: #dbeafe;
+            color: #0c2d6b;
+        }
+
+        .badge-high {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-low {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+
+            .main-content {
+                margin-left: 240px;
+                width: calc(100% - 240px);
+            }
+
+            .complaints-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .ai-assistant-section {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+            }
+
+            .split-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .form-panel {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                transition: left 0.3s;
+                z-index: 1000;
+                width: 280px;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 1rem;
+            }
+
+            .topbar {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .topbar-user {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .complaints-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            table {
+                font-size: 0.85em;
+            }
+
+            th, td {
+                padding: 0.75rem;
+            }
+
+            .table-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 100%;
+                left: -100%;
+            }
+
+            .topbar {
+                padding: 1rem;
+            }
+
+            .topbar-title {
+                font-size: 1.5em;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .complaints-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .ai-assistant-section {
+                padding: 1.5rem 1rem;
+            }
+
+            .btn {
+                font-size: 0.9em;
+                padding: 0.7rem 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Flash Messages -->
+    <div class="flash-messages" id="flashMessages"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            📋 UniVoice
+        </div>
+        
+        <nav class="sidebar-nav">
+            <button class="sidebar-nav-item active" onclick="showUserDashboard()">
+                <span class="sidebar-nav-item-icon">📊</span>
+                <span>Dashboard</span>
+            </button>
+            <button class="sidebar-nav-item" onclick="showPage('studentDashboard')">
+                <span class="sidebar-nav-item-icon">📋</span>
+                <span>My Complaints</span>
+            </button>
+            <button class="sidebar-nav-item" onclick="alert('Settings coming soon!')">
+                <span class="sidebar-nav-item-icon">⚙️</span>
+                <span>Settings</span>
+            </button>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="sidebar-logout" onclick="logout()">
+                <span>🚪</span>
+                <span>Sign Out</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Login Page -->
+        <div id="loginPage" class="page active">
+            <div class="login-wrapper">
+                <div class="login-container">
+                    <h1 class="login-title">UniVoice</h1>
+                    <p class="login-subtitle">Hostel Complaint Management</p>
+
+                    <form onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" name="email" placeholder="Enter your email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" name="password" placeholder="Enter your password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Login Manually</button>
+                    </form>
+
+                    <div class="login-divider">Or sign in with</div>
+
+                    <button class="btn btn-google" onclick="handleGoogleLogin()">Sign in with Google</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Bar (shown for authenticated users) -->
+        <div id="topbar" class="topbar" style="display: none;">
+            <div>
+                <div class="topbar-title" id="pageTitle">Dashboard</div>
+            </div>
+            <div class="topbar-user">
+                <div class="user-profile-info">
+                    <div class="user-profile-name" id="userName">User</div>
+                    <div class="user-profile-meta" id="userMeta">Student • Room 302 • B-Block</div>
+                </div>
+                <div class="user-avatar" id="userAvatar">JD</div>
+            </div>
+        </div>
+
+        <!-- Student Dashboard -->
+        <div id="studentDashboard" class="page">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-icon blue">📋</div>
+                        <div class="stat-card-content">
+                            <h3>My Total Logged</h3>
+                            <div class="stat-value">2</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-icon orange">⏳</div>
+                        <div class="stat-card-content">
+                            <h3>Awaiting Action</h3>
+                            <div class="stat-value">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-icon green">✓</div>
+                        <div class="stat-card-content">
+                            <h3>Resolved Cases</h3>
+                            <div class="stat-value">1</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="complaints-section">
+                    <div class="complaints-section-header">
+                        <div>
+                            <div class="complaints-section-title">Your Recent Complaints</div>
+                            <div class="complaints-section-subtitle">Manage and track your issues</div>
+                        </div>
+                        <button class="btn btn-primary" onclick="openComplaintModal()" style="width: 180px;">➕ New Complaint</button>
+                    </div>
+
+                    <div class="complaints-grid">
+                        <div class="complaint-card">
+                            <div class="complaint-card-header">
+                                <div class="complaint-card-icon plumbing">🔧</div>
+                                <div class="complaint-card-status">
+                                    <span class="badge badge-pending">In Progress</span>
+                                </div>
+                            </div>
+                            <div class="complaint-card-title">Water leak in washroom</div>
+                            <div class="complaint-card-meta">#1 • Room 302 • 14/02/2026</div>
+                            <div class="complaint-card-description">The tap in room 302 is constantly dripping and creating a mess.</div>
+                            <div class="complaint-card-footer">
+                                <span class="priority-text priority-high">High Priority</span>
+                                <a href="#" class="view-details-link">View Full Details →</a>
+                            </div>
+                        </div>
+
+                        <div class="complaint-card">
+                            <div class="complaint-card-header">
+                                <div class="complaint-card-icon internet">📶</div>
+                                <div class="complaint-card-status">
+                                    <span class="badge badge-success">Resolved</span>
+                                </div>
+                            </div>
+                            <div class="complaint-card-title">Slow WiFi connection</div>
+                            <div class="complaint-card-meta">#3 • Room 412 • 10/02/2026</div>
+                            <div class="complaint-card-description">Wifi speed is below 1Mbps in the B-block during peak hours.</div>
+                            <div class="complaint-card-footer">
+                                <span class="priority-text priority-low">Low Priority</span>
+                                <a href="#" class="view-details-link">View Full Details →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ai-assistant-section">
+                    <div class="ai-assistant-content">
+                        <h3>✨ Administrative Insight</h3>
+                        <p>Our AI analyzes response times to ensure your complaints are handled promptly by the Warden team.</p>
+                    </div>
+                    <button class="btn-ai" onclick="alert('AI Assistant feature coming soon!')">Ask AI Assistant</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard -->
+        <div id="adminDashboard" class="page">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-icon blue">📋</div>
+                        <div class="stat-card-content">
+                            <h3>Total Complaints</h3>
+                            <div class="stat-value">24</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-icon orange">⏳</div>
+                        <div class="stat-card-content">
+                            <h3>Pending</h3>
+                            <div class="stat-value">8</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-icon green">✓</div>
+                        <div class="stat-card-content">
+                            <h3>Resolved</h3>
+                            <div class="stat-value">16</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 style="margin: 2rem 0 1.5rem; color: #2c3e50; font-size: 1.4em;">Quick Actions</h2>
+                <div class="dashboard-grid">
+                    <div class="dashboard-card" onclick="showPage('manageHostels')">
+                        <div class="dashboard-card-icon">🏢</div>
+                        <div class="dashboard-card-title">Hostels</div>
+                    </div>
+                    <div class="dashboard-card" onclick="showPage('manageWardens')">
+                        <div class="dashboard-card-icon">👮</div>
+                        <div class="dashboard-card-title">Wardens</div>
+                    </div>
+                    <div class="dashboard-card" onclick="showPage('manageMentors')">
+                        <div class="dashboard-card-icon">🎓</div>
+                        <div class="dashboard-card-title">Mentors</div>
+                    </div>
+                    <div class="dashboard-card" onclick="showPage('manageStudents')">
+                        <div class="dashboard-card-icon">👨‍🎓</div>
+                        <div class="dashboard-card-title">Students</div>
+                    </div>
+                    <div class="dashboard-card" onclick="showPage('complaints')">
+                        <div class="dashboard-card-icon">🚨</div>
+                        <div class="dashboard-card-title">Complaints</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manage Hostels -->
+        <div id="manageHostels" class="page">
+            <div class="container">
+                <h2 style="margin-bottom: 2rem; color: #2c3e50;">Manage Hostels</h2>
+                <div class="split-layout">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Hostel Name</th>
+                                    <th>Gender</th>
+                                    <th>Total Rooms</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hostelTable">
+                                <tr>
+                                    <td>North Block</td>
+                                    <td>Boys</td>
+                                    <td>50</td>
+                                    <td class="table-actions">
+                                        <button class="btn btn-secondary btn-small">Edit</button>
+                                        <button class="btn btn-danger btn-small">Delete</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>South Block</td>
+                                    <td>Girls</td>
+                                    <td>48</td>
+                                    <td class="table-actions">
+                                        <button class="btn btn-secondary btn-small">Edit</button>
+                                        <button class="btn btn-danger btn-small">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="form-panel">
+                        <div class="form-panel-title">Create Hostel</div>
+                        <form onsubmit="handleCreateHostel(event)">
+                            <div class="form-group">
+                                <label>Hostel Name</label>
+                                <input type="text" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Gender</label>
+                                <select name="gender" required>
+                                    <option value="">Select...</option>
+                                    <option value="Boys">Boys</option>
+                                    <option value="Girls">Girls</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Total Rooms</label>
+                                <input type="number" name="total_rooms" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </form>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="showPage('adminDashboard')" style="margin-top: 2rem;">Back</button>
+            </div>
+        </div>
+
+        <!-- Manage Wardens -->
+        <div id="manageWardens" class="page">
+            <div class="container">
+                <h2 style="margin-bottom: 2rem; color: #2c3e50;">Manage Wardens</h2>
+                <div class="split-layout">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Hostel</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="wardenTable">
+                                <tr>
+                                    <td>Mr. Sharma</td>
+                                    <td>sharma@kiit.ac.in</td>
+                                    <td>North Block</td>
+                                    <td class="table-actions">
+                                        <button class="btn btn-secondary btn-small">Edit</button>
+                                        <button class="btn btn-danger btn-small">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="form-panel">
+                        <div class="form-panel-title">Create Warden</div>
+                        <form onsubmit="handleCreateWarden(event)">
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" name="password" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Hostel</label>
+                                <select name="hostel_id" required>
+                                    <option value="">Select...</option>
+                                    <option value="1">North Block</option>
+                                    <option value="2">South Block</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </form>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="showPage('adminDashboard')" style="margin-top: 2rem;">Back</button>
+            </div>
+        </div>
+
+        <!-- Manage Mentors -->
+        <div id="manageMentors" class="page">
+            <div class="container">
+                <h2 style="margin-bottom: 2rem; color: #2c3e50;">Manage Mentors</h2>
+                <div class="split-layout">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mentorTable">
+                                <tr>
+                                    <td>Prof. Singh</td>
+                                    <td>singh@kiit.ac.in</td>
+                                    <td class="table-actions">
+                                        <button class="btn btn-secondary btn-small">Edit</button>
+                                        <button class="btn btn-danger btn-small">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="form-panel">
+                        <div class="form-panel-title">Create Mentor</div>
+                        <form onsubmit="handleCreateMentor(event)">
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" name="password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </form>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="showPage('adminDashboard')" style="margin-top: 2rem;">Back</button>
+            </div>
+        </div>
+
+        <!-- Manage Students -->
+        <div id="manageStudents" class="page">
+            <div class="container">
+                <h2 style="margin-bottom: 2rem; color: #2c3e50;">Manage Students</h2>
+                
+                <div class="filter-section">
+                    <label>Select Hostel:</label>
+                    <select id="hostelFilter" onchange="filterStudents()">
+                        <option value="">All Hostels</option>
+                        <option value="1">North Block</option>
+                        <option value="2">South Block</option>
+                    </select>
+                </div>
+
+                <div class="split-layout">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Room No</th>
+                                    <th>Name</th>
+                                    <th>Mentor</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentTable">
+                                <tr>
+                                    <td>101-A</td>
+                                    <td>Rahul Kumar</td>
+                                    <td>Prof. Singh</td>
+                                    <td class="table-actions">
+                                        <button class="btn btn-secondary btn-small" onclick="showPage('studentProfile')">View</button>
+                                        <button class="btn btn-secondary btn-small">Edit</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>102-A</td>
+                                    <td>Priya Sharma</td>
+                                    <td>Prof. Singh</td>
+                                    <td class="table-actions">
+                                        <button class="btn btn-secondary btn-small" onclick="showPage('studentProfile')">View</button>
+                                        <button class="btn btn-secondary btn-small">Edit</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="form-panel">
+                        <div class="form-panel-title">Create Student</div>
+                        <form onsubmit="handleCreateStudent(event)">
+                            <div class="form-group">
+                                <label>Room Number</label>
+                                <input type="text" name="room_number" placeholder="e.g. 101-A" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Hostel</label>
+                                <select name="hostel_id" required>
+                                    <option value="">Select...</option>
+                                    <option value="1">North Block</option>
+                                    <option value="2">South Block</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Mentor</label>
+                                <select name="mentor_id" required>
+                                    <option value="">Select...</option>
+                                    <option value="1">Prof. Singh</option>
+                                    <option value="2">Prof. Gupta</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </form>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="showPage('adminDashboard')" style="margin-top: 2rem;">Back</button>
+            </div>
+        </div>
+
+        <!-- Student Deep Profile -->
+        <div id="studentProfile" class="page">
+            <div class="container">
+                <h2 style="margin-bottom: 2rem; color: #2c3e50;">Student Profile</h2>
+
+                <div class="profile-card">
+                    <div class="profile-field">
+                        <div class="profile-label">Name</div>
+                        <div class="profile-value">Rahul Kumar</div>
+                    </div>
+                    <div class="profile-field">
+                        <div class="profile-label">Room Number</div>
+                        <div class="profile-value">101-A</div>
+                    </div>
+                    <div class="profile-field">
+                        <div class="profile-label">Hostel</div>
+                        <div class="profile-value">North Block</div>
+                    </div>
+                    <div class="profile-field">
+                        <div class="profile-label">Mentor</div>
+                        <div class="profile-value">Prof. Singh</div>
+                    </div>
+                </div>
+
+                <div id="flaggedSection" class="flagged-section" style="display: none;">
+                    <div class="flagged-title">⚠️ FLAGGED FOR ABUSIVE BEHAVIOR</div>
+                    <div class="flagged-message">This student has been reported for abusive/disruptive behavior. Review complaint history carefully.</div>
+                </div>
+
+                <div style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);">
+                    <h2 style="color: #2c3e50; margin-bottom: 1rem;">Complaint History</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Category</th>
+                                    <th>Issue</th>
+                                    <th>Status</th>
+                                    <th>Comments</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2024-01-15</td>
+                                    <td>Electrical</td>
+                                    <td>Tube light flickering</td>
+                                    <td><span class="badge badge-success">Resolved</span></td>
+                                    <td>Fixed and tested</td>
+                                </tr>
+                                <tr>
+                                    <td>2024-01-20</td>
+                                    <td>Plumbing</td>
+                                    <td>Water leak</td>
+                                    <td><span class="badge badge-pending">Pending</span></td>
+                                    <td>Waiting for parts</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <button class="btn btn-secondary" onclick="showPage('manageStudents')" style="margin-top: 2rem;">Back</button>
+            </div>
+        </div>
+
+        <!-- Staff Dashboard (Warden/Mentor) -->
+        <div id="staffDashboard" class="page">
+            <div class="container">
+                <h2 style="margin-bottom: 2rem; color: #2c3e50;">Task Dashboard</h2>
+
+                <div style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);">
+                    <h2 style="color: #2c3e50; margin-bottom: 1rem;">Assigned Complaints</h2>
+                    <div id="staffComplaintsContainer">
+                        <div class="complaint-card">
+                            <div class="complaint-card-header">
+                                <div>
+                                    <div class="complaint-card-title">Tube light flickering - Room 105</div>
+                                    <div class="complaint-card-meta">👤 Priya Sharma • 🏷️ Electrical</div>
+                                </div>
+                            </div>
+                            <div class="complaint-card-description">The main light in the room is flickering since yesterday evening.</div>
+                            
+                            <form onsubmit="handleComplaintAction(event)" style="margin-top: 1rem;">
+                                <div class="form-group">
+                                    <label>Update Status</label>
+                                    <select name="status" required>
+                                        <option value="">Select...</option>
+                                        <option value="resolved">Resolved</option>
+                                        <option value="rejected">Rejected</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Comment</label>
+                                    <textarea name="comment" placeholder="Enter your feedback..."></textarea>
+                                </div>
+                                <div class="btn-group">
+                                    <button type="submit" class="btn btn-success">Submit</button>
+                                    <label style="display: flex; align-items: center; cursor: pointer; padding: 0.75rem 1rem;">
+                                        <input type="checkbox" name="flag_abusive" style="margin-right: 0.5rem;">
+                                        Flag as Abusive
+                                    </label>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Complaints Management -->
+        <div id="complaints" class="page">
+            <div class="container">
+                <h2 style="margin-bottom: 2rem; color: #2c3e50;">All Complaints</h2>
+                
+                <div style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Student</th>
+                                    <th>Category</th>
+                                    <th>Priority</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="complaintsTable">
+                                <tr>
+                                    <td>#001</td>
+                                    <td>Rahul Kumar</td>
+                                    <td>Plumbing</td>
+                                    <td><span class="badge badge-high">High</span></td>
+                                    <td><span class="badge badge-pending">In Progress</span></td>
+                                    <td>2024-01-15</td>
+                                    <td class="table-actions">
+                                        <button class="btn btn-secondary btn-small">View</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#002</td>
+                                    <td>Priya Sharma</td>
+                                    <td>Electrical</td>
+                                    <td><span class="badge badge-medium">Medium</span></td>
+                                    <td><span class="badge badge-pending">Pending</span></td>
+                                    <td>2024-01-18</td>
+                                    <td class="table-actions">
+                                        <button class="btn btn-secondary btn-small">View</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#003</td>
+                                    <td>Rahul Kumar</td>
+                                    <td>Internet</td>
+                                    <td><span class="badge badge-low">Low</span></td>
+                                    <td><span class="badge badge-success">Resolved</span></td>
+                                    <td>2024-01-10</td>
+                                    <td class="table-actions">
+                                        <button class="btn btn-secondary btn-small">View</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <button class="btn btn-secondary" onclick="showPage('adminDashboard')" style="margin-top: 2rem;">Back</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- File Complaint Modal -->
+    <div id="complaintModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeComplaintModal()">✕</button>
+            <h2 style="color: #2c3e50; margin-bottom: 1.5rem;">File a Complaint</h2>
+            <form onsubmit="handleFileComplaint(event)">
+                <div class="form-group">
+                    <label>Category</label>
+                    <select name="category" required>
+                        <option value="">Select...</option>
+                        <option value="Electrical">Electrical</option>
+                        <option value="Plumbing">Plumbing</option>
+                        <option value="Mess">Mess</option>
+                        <option value="Internet">Internet</option>
+                        <option value="Furniture">Furniture</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Subject</label>
+                    <input type="text" name="heading" placeholder="Brief subject of complaint" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" placeholder="Detailed description of the issue" required></textarea>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">File Complaint</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeComplaintModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Page Management
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            window.scrollTo(0, 0);
+            
+            // Update active nav item
+            document.querySelectorAll('.sidebar-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+        }
+
+        function showUserDashboard() {
+            const role = localStorage.getItem('userRole') || 'Student';
+            if (role === 'Admin') {
+                showPage('adminDashboard');
+            } else {
+                showPage('studentDashboard');
+            }
+            updateActiveNav(0);
+        }
+
+        function updateActiveNav(index) {
+            document.querySelectorAll('.sidebar-nav-item').forEach((item, i) => {
+                item.classList.toggle('active', i === index);
+            });
+        }
+
+        // Authentication
+        function handleLogin(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const email = formData.get('email');
+            
+            // Simulate login - set role based on email domain
+            let role = 'Student';
+            if (email.includes('admin')) role = 'Admin';
+            else if (email.includes('warden')) role = 'Warden';
+            else if (email.includes('mentor')) role = 'Mentor';
+            
+            localStorage.setItem('userRole', role);
+            localStorage.setItem('userName', email.split('@')[0]);
+            localStorage.setItem('isAuthenticated', 'true');
+            
+            loadUserInfo();
+            showTopmenu();
+            showUserDashboard();
+            showFlash('success', 'Login successful!');
+        }
+
+        function handleGoogleLogin() {
+            alert('Google Login would redirect to: {{ url_for("main.google_login") }}');
+        }
+
+        function logout() {
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('isAuthenticated');
+            document.getElementById('topbar').style.display = 'none';
+            showPage('loginPage');
+            showFlash('info', 'Logged out successfully');
+        }
+
+        function showTopmenu() {
+            document.getElementById('topbar').style.display = 'flex';
+        }
+
+        function loadUserInfo() {
+            const role = localStorage.getItem('userRole') || 'Guest';
+            const name = localStorage.getItem('userName') || 'User';
+            document.getElementById('userName').textContent = name.charAt(0).toUpperCase() + name.slice(1);
+            
+            // Set user meta based on role
+            let meta = role;
+            if (role === 'Student') {
+                meta = 'Student • Room 302 • B-Block';
+            }
+            document.getElementById('userMeta').textContent = meta;
+            
+            // Set avatar initials
+            const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+            document.getElementById('userAvatar').textContent = initials || name[0].toUpperCase();
+        }
+
+        // Flash Messages
+        function showFlash(type, message) {
+            const container = document.getElementById('flashMessages');
+            const flash = document.createElement('div');
+            flash.className = `flash ${type}`;
+            
+            const icon = type === 'success' ? '✓' : (type === 'danger' ? '✕' : 'ℹ');
+            flash.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+            
+            container.appendChild(flash);
+            
+            setTimeout(() => flash.remove(), 4000);
+        }
+
+        // Form Handlers
+        function handleCreateHostel(event) {
+            event.preventDefault();
+            showFlash('success', 'Hostel created successfully!');
+            event.target.reset();
+        }
+
+        function handleCreateWarden(event) {
+            event.preventDefault();
+            showFlash('success', 'Warden created successfully!');
+            event.target.reset();
+        }
+
+        function handleCreateMentor(event) {
+            event.preventDefault();
+            showFlash('success', 'Mentor created successfully!');
+            event.target.reset();
+        }
+
+        function handleCreateStudent(event) {
+            event.preventDefault();
+            showFlash('success', 'Student created successfully!');
+            event.target.reset();
+        }
+
+        function handleFileComplaint(event) {
+            event.preventDefault();
+            closeComplaintModal();
+            showFlash('success', 'Complaint filed successfully!');
+        }
+
+        function handleComplaintAction(event) {
+            event.preventDefault();
+            showFlash('success', 'Complaint status updated!');
+        }
+
+        // Modal Management
+        function openComplaintModal() {
+            document.getElementById('complaintModal').classList.add('active');
+        }
+
+        function closeComplaintModal() {
+            document.getElementById('complaintModal').classList.remove('active');
+        }
+
+        // Filter
+        function filterStudents() {
+            showFlash('info', 'Students filtered');
+        }
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            loadUserInfo();
+        });
+
+        // Close modal on background click
+        window.addEventListener('click', (event) => {
+            const modal = document.getElementById('complaintModal');
+            if (event.target === modal) {
+                closeComplaintModal();
+            }
+        });
+    </script>
+</body>
+</html>

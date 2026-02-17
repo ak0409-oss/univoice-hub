@@ -1,0 +1,123 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>UniVoice - Student Dashboard</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Hyperspace CSS -->
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body class="is-preload">
+
+    <!-- Sidebar -->
+    <section id="sidebar">
+        <div class="inner">
+            <nav>
+                <ul>
+                    <li><a href="#">Dashboard</a></li>
+                    <li><a href="#">Submit Complaint</a></li>
+                    <li><a href="#">Track Complaints</a></li>
+                    <li><a href="#">Profile</a></li>
+                    <li><a href="#">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Main Wrapper -->
+    <div id="wrapper">
+
+        <!-- Dashboard Section -->
+        <section class="wrapper style1">
+            <div class="inner">
+
+                <header class="major">
+                    <h2>Student Dashboard</h2>
+                    <p>Welcome back, Student</p>
+                </header>
+
+                <!-- Statistics Cards -->
+                <div class="features">
+
+                    <section>
+                        <span class="icon solid major fa-file-alt"></span>
+                        <h3>Total Complaints</h3>
+                        <p>12</p>
+                    </section>
+
+                    <section>
+                        <span class="icon solid major fa-clock"></span>
+                        <h3>Pending</h3>
+                        <p>5</p>
+                    </section>
+
+                    <section>
+                        <span class="icon solid major fa-check-circle"></span>
+                        <h3>Resolved</h3>
+                        <p>7</p>
+                    </section>
+
+                </div>
+
+                <hr />
+
+                <!-- Complaint Table -->
+                <h3>Your Complaints</h3>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#101</td>
+                                <td>Water Leakage</td>
+                                <td style="color: red; font-weight: bold;">Pending</td>
+                                <td>12 Feb 2026</td>
+                            </tr>
+                            <tr>
+                                <td>#102</td>
+                                <td>Fan Not Working</td>
+                                <td style="color: green; font-weight: bold;">Resolved</td>
+                                <td>10 Feb 2026</td>
+                            </tr>
+                            <tr>
+                                <td>#103</td>
+                                <td>WiFi Issue</td>
+                                <td style="color: orange; font-weight: bold;">In Progress</td>
+                                <td>8 Feb 2026</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <br>
+
+                <!-- Submit Button -->
+                <ul class="actions">
+                    <li><a href="#" class="button primary">Submit New Complaint</a></li>
+                </ul>
+
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Hyperspace JS -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+
+</body>
+</html>

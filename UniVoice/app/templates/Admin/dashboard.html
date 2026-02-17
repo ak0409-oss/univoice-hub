@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 style="text-align: center; margin-bottom: 30px;">Admin Control Center</h2>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+    
+    <a href="{{ url_for('main.admin_hostels') }}" style="text-decoration: none; color: inherit;">
+        <div style="width: 200px; padding: 30px; border: 2px solid #333; text-align: center; border-radius: 10px; background: #f9f9f9; transition: 0.3s;">
+            <h1 style="font-size: 3em; margin: 0;">🏢</h1>
+            <h3>Manage Hostels</h3>
+        </div>
+    </a>
+
+    <a href="{{ url_for('main.admin_wardens') }}" style="text-decoration: none; color: inherit;">
+        <div style="width: 200px; padding: 30px; border: 2px solid orange; text-align: center; border-radius: 10px; background: #fffdf0;">
+            <h1 style="font-size: 3em; margin: 0;">👮‍♂️</h1>
+            <h3>Manage Wardens</h3>
+        </div>
+    </a>
+
+    <a href="{{ url_for('main.admin_mentors') }}" style="text-decoration: none; color: inherit;">
+        <div style="width: 200px; padding: 30px; border: 2px solid purple; text-align: center; border-radius: 10px; background: #fcf0fc;">
+            <h1 style="font-size: 3em; margin: 0;">🎓</h1>
+            <h3>Manage Mentors</h3>
+        </div>
+    </a>
+
+    <a href="{{ url_for('main.admin_students') }}" style="text-decoration: none; color: inherit;">
+        <div style="width: 200px; padding: 30px; border: 2px solid blue; text-align: center; border-radius: 10px; background: #f0f8ff;">
+            <h1 style="font-size: 3em; margin: 0;">👨‍🎓</h1>
+            <h3>Manage Students</h3>
+        </div>
+    </a>
+
+    <a href="{{ url_for('main.admin_view_complaints') }}" style="text-decoration: none; color: inherit;">
+        <div style="width: 200px; padding: 30px; border: 2px solid red; text-align: center; border-radius: 10px; background: #fff0f0;">
+            <h1 style="font-size: 3em; margin: 0;">🚨</h1>
+            <h3>All Complaints</h3>
+        </div>
+    </a>
+
+</div>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Mentor Dashboard</h2>
+<p>Welcome, Mentor {{ current_user.name }}</p>
+
+<h3>My Mentees' Complaints</h3>
+
+{% if not complaints %}
+    <p>Your mentees have not filed any complaints yet.</p>
+{% else %}
+    <table border="1" cellpadding="10" style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background: #eef;">
+                <th>Student</th>
+                <th>Issue</th>
+                <th>Current Status</th>
+                <th>Mentor Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in complaints %}
+            <tr>
+                <td>
+                    <strong>{{ c.author.name }}</strong><br>
+                    Room: {{ c.author.room_number or 'N/A' }}
+                </td>
+
+                <td>
+                    <span style="background:#ddd; padding:2px 5px; font-size:0.8em;">{{ c.category.value|upper }}</span>
+                    <br>
+                    <strong>{{ c.heading }}</strong>
+                    <br>
+                    {{ c.description }}
+                </td>
+
+                <td>
+                    <strong style="color: 
+                        {% if c.status.value == 'resolved' %}green
+                        {% elif c.status.value == 'pending' %}orange
+                        {% elif c.status.value == 'rejected' %}red
+                        {% endif %}">
+                        {{ c.status.value|upper }}
+                    </strong>
+                    {% if c.warden_comment %}
+                        <br><small>Warden: {{ c.warden_comment }}</small>
+                    {% endif %}
+                </td>
+
+                <td style="background: #fafafa;">
+                    <form method="POST">
+                        <input type="hidden" name="complaint_id" value="{{ c.id }}">
+                        
+                        <label style="font-size: 0.9em; font-weight: bold; color: #d9534f;">
+                            <input type="checkbox" name="is_urgent" {% if c.is_urgent %}checked{% endif %}>
+                            Mark as URGENT (Escalate)
+                        </label>
+                        
+                        <textarea name="mentor_comment" placeholder="Add your advice..." rows="2" style="width: 100%; margin-top:5px;">{{ c.mentor_comment or '' }}</textarea>
+                        
+                        <button type="submit" style="margin-top:5px; background: #007bff; color: white; border: none;">Update</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Manage Hostels</h2>
+    <a href="{{ url_for('main.admin_dashboard') }}" style="text-decoration: none;">&larr; Back to Dashboard</a>
+</div>
+
+<div style="display: flex; gap: 30px;">
+    
+    <div style="flex: 2;">
+        <h3>Existing Hostels</h3>
+        {% if not hostels %}
+            <p>No hostels created yet.</p>
+        {% else %}
+            <table border="1" style="width: 100%; border-collapse: collapse;">
+                <thead style="background: #333; color: white;">
+                    <tr>
+                        <th style="padding: 10px;">Hostel Name</th>
+                        <th style="padding: 10px;">Type</th>
+                        <th style="padding: 10px;">Capacity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for h in hostels %}
+                    <tr style="text-align: center;">
+                        <td style="padding: 10px;"><strong>{{ h.name }}</strong></td>
+                        <td>{{ h.gender }}</td>
+                        <td>{{ h.total_rooms }} Rooms</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+
+    <div style="flex: 1; padding: 20px; border: 2px solid #333; background: #f9f9f9; height: fit-content; border-radius: 8px;">
+        <h3 style="margin-top: 0;">Add New Hostel</h3>
+        <form method="POST">
+            <label>Hostel Name</label>
+            <input type="text" name="name" placeholder="e.g. Block A" required style="width: 100%; margin-bottom: 15px; padding: 8px;">
+
+            <label>Gender</label>
+            <select name="gender" style="width: 100%; margin-bottom: 15px; padding: 8px;">
+                <option value="Boys">Boys Hostel</option>
+                <option value="Girls">Girls Hostel</option>
+            </select>
+
+            <label>Total Rooms</label>
+            <input type="number" name="total_rooms" placeholder="e.g. 50" required style="width: 100%; margin-bottom: 15px; padding: 8px;">
+
+            <button type="submit" style="width: 100%; background: #333; color: white; padding: 10px; border: none; cursor: pointer;">
+                Create Hostel
+            </button>
+        </form>
+    </div>
+
+</div>
+{% endblock %}

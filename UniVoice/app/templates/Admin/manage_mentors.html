@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Manage Mentors</h2>
+    <a href="{{ url_for('main.admin_dashboard') }}" style="text-decoration: none;">&larr; Back to Dashboard</a>
+</div>
+
+<div style="display: flex; gap: 30px;">
+
+    <div style="flex: 2;">
+        <h3>Current Mentors</h3>
+        {% if not mentors %}
+            <p>No mentors created yet.</p>
+        {% else %}
+            <table border="1" style="width: 100%; border-collapse: collapse;">
+                <thead style="background: purple; color: white;">
+                    <tr>
+                        <th style="padding: 10px;">Name</th>
+                        <th style="padding: 10px;">Email</th>
+                        <th style="padding: 10px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in mentors %}
+                    <tr style="text-align: center;">
+                        <td style="padding: 10px;"><strong>{{ m.name }}</strong></td>
+                        <td>{{ m.email }}</td>
+                        <td>
+                            <a href="{{ url_for('main.edit_user', user_id=m.id) }}" style="color: blue;">Edit</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+
+    <div style="flex: 1; padding: 20px; border: 2px solid purple; background: #fcf0fc; height: fit-content; border-radius: 8px;">
+        <h3 style="margin-top: 0;">Add New Mentor</h3>
+        <form method="POST">
+            <input type="email" name="email" placeholder="Email Address" required style="width: 100%; margin-bottom: 10px; padding: 8px;">
+            <input type="text" name="name" placeholder="Full Name" required style="width: 100%; margin-bottom: 10px; padding: 8px;">
+            <input type="password" name="password" placeholder="Password" required style="width: 100%; margin-bottom: 15px; padding: 8px;">
+
+            <button type="submit" style="width: 100%; background: purple; color: white; padding: 10px; border: none; cursor: pointer;">
+                Create Mentor
+            </button>
+        </form>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Warden Dashboard</h2>
+<p>Hostel: <strong>{{ current_user.hostel.name }}</strong></p>
+
+<style>
+    .section-header { background: #eee; padding: 10px; margin-top: 30px; border-left: 5px solid #333; }
+    .table-style { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .table-style th, .table-style td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    .btn-resolve { background: green; color: white; border: none; padding: 5px; cursor: pointer; }
+    .btn-reject { background: red; color: white; border: none; padding: 5px; cursor: pointer; }
+    .btn-progress { background: orange; color: white; border: none; padding: 5px; cursor: pointer; }
+</style>
+
+<h3 class="section-header" style="border-color: red; color: red;">1. Mentor Forwarded (URGENT)</h3>
+{% with complaints=mentor_forwarded, section='urgent' %}
+    {% include "warden/_complaint_table.html" %}
+{% endwith %}
+
+<h3 class="section-header" style="border-color: orange;">2. Pending Complaints</h3>
+{% with complaints=pending, section='pending' %}
+    {% include "warden/_complaint_table.html" %}
+{% endwith %}
+
+<h3 class="section-header" style="border-color: blue;">3. In Progress</h3>
+{% with complaints=in_progress, section='progress' %}
+    {% include "warden/_complaint_table.html" %}
+{% endwith %}
+
+<h3 class="section-header" style="border-color: green;">4. Completed History</h3>
+{% with complaints=completed, section='completed' %}
+    {% include "warden/_complaint_table.html" %}
+{% endwith %}
+
+<h3 class="section-header" style="border-color: grey;">5. Archived / Flagged</h3>
+{% with complaints=archived, section='archived' %}
+    {% include "warden/_complaint_table.html" %}
+{% endwith %}
+
+{% endblock %}

@@ -1,0 +1,58 @@
+{% if not complaints %}
+    <p><i>No complaints in this section.</i></p>
+{% else %}
+<table class="table-style">
+    <thead>
+        <tr>
+            <th>Student</th>
+            <th>Category</th>
+            <th>Issue</th>
+            <th>Warden Comment</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for c in complaints %}
+        <tr>
+            <td>
+                {{ c.author.name }}<br>
+                Room: {{ c.author.room_number }}
+            </td>
+            <td>{{ c.category.value|upper }}</td>
+            <td>
+                <strong>{{ c.heading }}</strong><br>
+                {{ c.description }}
+                {% if c.mentor_comment %}
+                    <br><small style="color: blue;">Mentor: {{ c.mentor_comment }}</small>
+                {% endif %}
+            </td>
+            
+            <form method="POST">
+                <input type="hidden" name="complaint_id" value="{{ c.id }}">
+                
+                <td>
+                    {% if section == 'completed' %}
+                        {{ c.warden_comment }}
+                    {% else %}
+                        <textarea name="warden_comment" rows="2">{{ c.warden_comment or '' }}</textarea>
+                    {% endif %}
+                </td>
+                
+                <td>
+                    {% if section == 'completed' %}
+                        <strong>{{ c.status.value|upper }}</strong>
+                        <br><small>{{ c.resolved_at.strftime('%Y-%m-%d') if c.resolved_at else '' }}</small>
+                    {% else %}
+                        <button type="submit" name="status" value="resolved" class="btn-resolve">Resolve</button>
+                        <button type="submit" name="status" value="rejected" class="btn-reject">Reject</button>
+                        {% if section != 'progress' %}
+                            <button type="submit" name="status" value="in_progress" class="btn-progress">Progress</button>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </form>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}

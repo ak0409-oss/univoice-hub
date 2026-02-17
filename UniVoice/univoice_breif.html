@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniVoice - UI/UX Design Handoff</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; background: #f4f4f9; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #2980b9; margin-top: 40px; border-left: 5px solid #2980b9; padding-left: 15px; }
+        h3 { color: #16a085; margin-top: 25px; }
+        
+        .page-card { border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 30px; background: #fff; }
+        .page-card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.08); border-color: #3498db; }
+        
+        .backend-zone { background: #fff0f0; border: 1px dashed #e74c3c; padding: 15px; border-radius: 6px; margin-top: 15px; }
+        .backend-title { color: #c0392b; font-weight: bold; display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.85em; }
+        
+        code { background: #eee; padding: 2px 5px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; font-weight: bold; }
+        
+        .ui-element { background: #e8f6f3; border-left: 4px solid #1abc9c; padding: 10px; margin: 5px 0; }
+        .tip { background: #fff8e1; border: 1px solid #ffe082; padding: 15px; border-radius: 6px; margin-top: 20px; font-style: italic; }
+        
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 0.8em; color: white; margin-right: 5px; }
+        .badge-red { background: #e74c3c; }
+        .badge-blue { background: #3498db; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div style="text-align: center; margin-bottom: 40px;">
+        <h1 style="border: none;">UniVoice Design System</h1>
+        <p style="font-size: 1.2em; color: #7f8c8d;">Backend-to-Figma Handoff Guide</p>
+        <p><strong>Goal:</strong> A clean, secure Hostel Management System for KIIT.</p>
+    </div>
+
+    <div class="page-card" style="background: #2c3e50; color: white;">
+        <h2 style="color: white; border-color: white;">Global UI Components</h2>
+        <p>These elements must appear on almost every page.</p>
+        
+        <div class="ui-element" style="color: #333;">
+            <strong>1. Flash Messages (Alerts)</strong><br>
+            Design a notification area at the very top. Needs styles for:
+            <ul>
+                <li><span style="color: green;">Success</span> (Green) - e.g., "Login Successful"</li>
+                <li><span style="color: red;">Danger/Error</span> (Red) - e.g., "Wrong Password"</li>
+                <li><span style="color: orange;">Info</span> (Blue/Yellow) - e.g., "Logged out"</li>
+            </ul>
+        </div>
+
+        <div class="ui-element" style="color: #333;">
+            <strong>2. Navigation Bar</strong><br>
+            Simple row: <strong>Logo (Left)</strong> and <strong>Logout Link (Right)</strong>.
+        </div>
+    </div>
+
+    <h2>1. Login Page (Public)</h2>
+    <div class="page-card">
+        <h3>Visual Requirements</h3>
+        <ul>
+            <li>Clean, centered card layout.</li>
+            <li>Professional University vibe.</li>
+            <li><strong>Two Distinct Sections:</strong> Manual Login vs. Google Login.</li>
+        </ul>
+
+        <div class="backend-zone">
+            <span class="backend-title">⚠️ BACKEND CONSTRAINTS (Do Not Rename Forms)</span>
+            <p><strong>Form Inputs:</strong></p>
+            <ul>
+                <li>Email Input: <code>name="email"</code></li>
+                <li>Password Input: <code>name="password"</code></li>
+                <li>Submit Button: Standard POST action</li>
+            </ul>
+            <p><strong>Google Button:</strong></p>
+            <ul>
+                <li>Must be a link <code>&lt;a&gt;</code>, not a form button.</li>
+                <li>Color: Google Red (#DB4437) or Blue.</li>
+                <li>Text: "Sign in with Google" (or KIIT Email).</li>
+            </ul>
+        </div>
+    </div>
+
+    <h2>2. Admin Dashboard (Hub)</h2>
+    <div class="page-card">
+        <h3>Visual Requirements</h3>
+        <p>A "Command Center" with 5 large, clickable cards/tiles. Minimal text, big icons.</p>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <div style="border:1px solid #333; padding: 10px; width: 120px; text-align: center;">🏢<br>Hostels</div>
+            <div style="border:1px solid orange; padding: 10px; width: 120px; text-align: center;">👮‍♂️<br>Wardens</div>
+            <div style="border:1px solid purple; padding: 10px; width: 120px; text-align: center;">🎓<br>Mentors</div>
+            <div style="border:1px solid blue; padding: 10px; width: 120px; text-align: center;">👨‍🎓<br>Students</div>
+            <div style="border:1px solid red; padding: 10px; width: 120px; text-align: center;">🚨<br>Complaints</div>
+        </div>
+    </div>
+
+    <h2>3. Management Pages (Split View)</h2>
+    <div class="page-card">
+        <h3>Layout Strategy: Split Screen</h3>
+        <p><strong>Left Side:</strong> A Data Table showing existing items.<br>
+        <strong>Right Side:</strong> A "Create New" Form stuck to the side.</p>
+
+        <div class="backend-zone">
+            <span class="backend-title">⚠️ FORM FIELD NAMES (Must Match Exact)</span>
+            
+            <p><strong>Create Hostel Form:</strong></p>
+            <code>name="name"</code> (Text), 
+            <code>name="gender"</code> (Dropdown: 'Boys', 'Girls'), 
+            <code>name="total_rooms"</code> (Number).
+
+            <p><strong>Create Warden/Mentor Form:</strong></p>
+            <code>name="email"</code>, 
+            <code>name="name"</code>, 
+            <code>name="password"</code>, 
+            <code>name="hostel_id"</code> (Dropdown - Wardens only).
+        </div>
+    </div>
+
+    <h2>4. Manage Students (Complex)</h2>
+    <div class="page-card">
+        <h3>UI Flow</h3>
+        <ol>
+            <li><strong>Top Bar:</strong> A Dropdown to select "Hostel". The page is empty until this is picked.</li>
+            <li><strong>Main Table:</strong> Shows <em>Room No | Name | Mentor</em>.</li>
+            <li><strong>Actions:</strong> Every row needs a "View Profile" button and "Edit" button.</li>
+        </ol>
+
+        <div class="backend-zone">
+            <span class="backend-title">⚠️ Create Student Form Data</span>
+            <ul>
+                <li><code>name="room_number"</code> (Text - e.g. "101-A")</li>
+                <li><code>name="hostel_id"</code> (Dropdown)</li>
+                <li><code>name="mentor_id"</code> (Dropdown)</li>
+            </ul>
+        </div>
+    </div>
+
+    <h2>5. Student Deep Profile</h2>
+    <div class="page-card">
+        <h3>Visual Hierarchy</h3>
+        <p>This page needs to look like a "Medical Record" or "Report Card".</p>
+        
+        <div class="ui-element" style="border-left-color: #e74c3c; background: #fff5f5;">
+            <strong>CRITICAL: Flagged Section</strong><br>
+            If the student has abusive history, this section appears at the top. It must be <strong>RED</strong> and alarming.
+        </div>
+        
+        <div class="ui-element">
+            <strong>Complaint History Table</strong><br>
+            Columns: Date, Category, Issue, Status (Color coded badge), Mentor/Warden Comments.
+        </div>
+    </div>
+
+    <h2>6. Student Dashboard (Frontend)</h2>
+    <div class="page-card">
+        <h3>Key Interactions</h3>
+        <ol>
+            <li><strong>"File Complaint" Button:</strong> Big, primary action button. Opens a Modal or Form.</li>
+            <li><strong>My History:</strong> A list of their past complaints.</li>
+        </ol>
+
+        <div class="backend-zone">
+            <span class="backend-title">⚠️ New Complaint Form</span>
+            <ul>
+                <li>Category Dropdown: <code>name="category"</code> (Electrical, Civil, Mess, Internet, Other)</li>
+                <li>Subject Line: <code>name="heading"</code></li>
+                <li>Details: <code>name="description"</code></li>
+            </ul>
+        </div>
+    </div>
+
+    <h2>7. Staff Dashboard</h2>
+    <div class="page-card">
+        <h3>Workflow</h3>
+        <p>This is a "Task List". Staff see complaints assigned to them.</p>
+        <p><strong>Each Complaint Card needs:</strong></p>
+        <ul>
+            <li>Student Info (Name, Room).</li>
+            <li>The Issue (Heading, Description).</li>
+            <li><strong>Action Area:</strong> Inputs to solve the issue.</li>
+        </ul>
+
+        <div class="backend-zone">
+            <span class="backend-title">⚠️ Action Form Inputs</span>
+            <ul>
+                <li>Status Dropdown: <code>name="status"</code> (values: 'resolved', 'rejected')</li>
+                <li>Comment Box: <code>name="comment"</code> (Text area for feedback)</li>
+                <li><strong>Warden Only:</strong> A "Flag as Abusive" checkbox/button.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="tip">
+        <strong>💡 Designer Tip for Friend:</strong><br>
+        The backend uses a standard "Grid System" (like Bootstrap). If you design using a 12-column grid, implementation will be instant. Keep tables simple with clean borders.
+    </div>
+
+</div>
+
+</body>
+</html>

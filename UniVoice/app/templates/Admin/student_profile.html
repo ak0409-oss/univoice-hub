@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="margin-bottom: 20px;">
+    <a href="{{ url_for('main.admin_students', hostel_id=student.hostel_id) }}">&larr; Back to List</a>
+</div>
+
+<div style="border: 1px solid #ccc; padding: 20px; background: #fcfcfc; margin-bottom: 30px;">
+    <h2 style="margin-top: 0;">{{ student.name }}</h2>
+    <p><strong>Email:</strong> {{ student.email }}</p>
+    <p><strong>Hostel:</strong> {{ student.hostel.name if student.hostel else 'Unassigned' }}</p>
+    <p><strong>Room:</strong> {{ student.room_number or 'N/A' }}</p>
+    <p><strong>Mentor:</strong> {{ student.mentor_ref.name if student.mentor_ref else 'None' }}</p>
+</div>
+
+<h3 style="color: red; border-bottom: 2px solid red;">⚠️ Flagged / Abusive History</h3>
+{% if not flagged %}
+    <p>No flagged complaints.</p>
+{% else %}
+    {% for c in flagged %}
+    <div style="background: #fff0f0; border: 1px solid red; padding: 10px; margin-bottom: 10px;">
+        <strong>{{ c.heading }}</strong> ({{ c.created_at.strftime('%Y-%m-%d') }})<br>
+        {{ c.description }}
+    </div>
+    {% endfor %}
+{% endif %}
+
+<h3 style="color: #333; border-bottom: 2px solid #333; margin-top: 30px;">📄 Complete Complaint History</h3>
+{% if not history %}
+    <p>No other complaints filed.</p>
+{% else %}
+    <table border="1" cellpadding="10" style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background: #eee;">
+                <th>Date</th>
+                <th>Category</th>
+                <th>Issue</th>
+                <th>Status</th>
+                <th>Comments</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in history %}
+            <tr>
+                <td>{{ c.created_at.strftime('%Y-%m-%d') }}</td>
+                <td>{{ c.category.value }}</td>
+                <td>
+                    <strong>{{ c.heading }}</strong><br>
+                    <small>{{ c.description }}</small>
+                </td>
+                <td>
+                    <span style="font-weight: bold; color: 
+                        {% if c.status.value == 'resolved' %}green
+                        {% elif c.status.value == 'pending' %}orange
+                        {% elif c.status.value == 'rejected' %}red
+                        {% endif %}">
+                        {{ c.status.value|upper }}
+                    </span>
+                </td>
+                <td>
+                    {% if c.mentor_comment %}
+                        <div style="color: purple; font-size: 0.9em;"><strong>Mentor:</strong> {{ c.mentor_comment }}</div>
+                    {% endif %}
+                    {% if c.warden_comment %}
+                        <div style="color: darkblue; font-size: 0.9em;"><strong>Warden:</strong> {{ c.warden_comment }}</div>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+{% endblock %}

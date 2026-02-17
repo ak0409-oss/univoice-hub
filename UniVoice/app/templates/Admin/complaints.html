@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Complaint Database Manager</h2>
+    <a href="{{ url_for('main.admin_dashboard') }}" style="text-decoration: none;">&larr; Back to Dashboard</a>
+</div>
+
+<div style="background: #f4f4f4; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+    <form method="GET">
+        <label style="font-weight: bold;">Select Hostel:</label>
+        <select name="hostel_id" onchange="this.form.submit()" style="padding: 5px; margin-left: 10px;">
+            <option value="">-- Choose Hostel --</option>
+            {% for h in hostels %}
+                <option value="{{ h.id }}" {% if selected_hostel and selected_hostel.id == h.id %}selected{% endif %}>
+                    {{ h.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+
+{% if selected_hostel %}
+
+    <div style="display: flex; border-bottom: 2px solid #ddd; margin-bottom: 20px;">
+        {% set base_link = url_for('main.admin_view_complaints', hostel_id=selected_hostel.id) %}
+        
+        <a href="{{ base_link }}&status=pending" 
+           style="padding: 10px 20px; text-decoration: none; color: black; border-bottom: 3px solid {% if current_status == 'pending' %}orange{% else %}transparent{% endif %}; font-weight: bold;">
+           Pending ({{ counts['pending'] }})
+        </a>
+
+        <a href="{{ base_link }}&status=in_progress" 
+           style="padding: 10px 20px; text-decoration: none; color: black; border-bottom: 3px solid {% if current_status == 'in_progress' %}blue{% else %}transparent{% endif %}; font-weight: bold;">
+           In Progress ({{ counts['in_progress'] }})
+        </a>
+
+        <a href="{{ base_link }}&status=resolved" 
+           style="padding: 10px 20px; text-decoration: none; color: black; border-bottom: 3px solid {% if current_status == 'resolved' %}green{% else %}transparent{% endif %}; font-weight: bold;">
+           Resolved ({{ counts['resolved'] }})
+        </a>
+
+        <a href="{{ base_link }}&status=rejected" 
+           style="padding: 10px 20px; text-decoration: none; color: black; border-bottom: 3px solid {% if current_status == 'rejected' %}red{% else %}transparent{% endif %}; font-weight: bold;">
+           Rejected ({{ counts['rejected'] }})
+        </a>
+
+        <a href="{{ base_link }}&status=flagged" 
+           style="padding: 10px 20px; text-decoration: none; color: black; border-bottom: 3px solid {% if current_status == 'flagged' %}grey{% else %}transparent{% endif %}; font-weight: bold;">
+           Flagged ({{ counts['flagged'] }})
+        </a>
+    </div>
+
+    {% if not complaints %}
+        <p style="padding: 20px; color: #666;">No complaints found in this category.</p>
+    {% else %}
+        <table border="1" style="width: 100%; border-collapse: collapse; border-color: #ddd; font-size: 0.9em;">
+            <thead style="background: #333; color: white;">
+                <tr>
+                    <th style="padding: 8px;">Date</th>
+                    <th style="padding: 8px;">Student</th>
+                    <th style="padding: 8px;">Category</th>
+                    <th style="padding: 8px;">Issue (Click to Expand)</th>
+                    <th style="padding: 8px;">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in complaints %}
+                <tr style="text-align: center; background: white;">
+                    <td>{{ c.created_at.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ c.author.name }} <br> <small>(Room {{ c.author.room_number }})</small></td>
+                    <td>{{ c.category.value|upper }}</td>
+
+                    <td style="text-align: left; padding: 10px;">
+                        <details>
+                            <summary style="cursor: pointer; font-weight: bold; color: #007bff;">
+                                {{ c.heading }}
+                            </summary>
+                            <div style="margin-top: 10px; padding: 10px; background: #fffbe6; border: 1px solid #ebdcb2;">
+                                <p style="margin:0;">{{ c.description }}</p>
+                                {% if c.warden_comment %}
+                                    <hr>
+                                    <p style="margin:0; color: darkblue;"><strong>Warden:</strong> {{ c.warden_comment }}</p>
+                                {% endif %}
+                                {% if c.mentor_comment %}
+                                    <p style="margin:0; color: purple;"><strong>Mentor:</strong> {{ c.mentor_comment }}</p>
+                                {% endif %}
+                            </div>
+                        </details>
+                    </td>
+
+                    <td>
+                        <form action="{{ url_for('main.admin_delete_complaint', complaint_id=c.id) }}" method="POST" onsubmit="return confirm('Permanently delete this record?');">
+                            <button type="submit" style="background: transparent; border: none; color: red; cursor: pointer; font-weight: bold;">
+                                X
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+{% else %}
+    <p>Please select a hostel above to view records.</p>
+{% endif %}
+{% endblock %}

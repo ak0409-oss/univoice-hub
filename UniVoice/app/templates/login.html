@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 400px; margin: 50px auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background: #fff;">
+    <h2 style="text-align: center;">UniVoice Login</h2>
+    
+    <form method="POST">
+        <input type="email" name="email" placeholder="Email" required style="width: 100%; margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+        <input type="password" name="password" placeholder="Password" required style="width: 100%; margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+        <button type="submit" style="width: 100%; padding: 10px; background: #333; color: white; border: none; border-radius: 5px; cursor: pointer;">Login Manually</button>
+    </form>
+
+    <div style="text-align: center; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
+        <p>Or sign in with:</p>
+        <a href="{{ url_for('main.google_login') }}">
+            <button style="width: 100%; padding: 12px; background: #DB4437; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">
+                G  Sign in with Google
+            </button>
+        </a>
+    </div>
+</div>
+{% endblock %}

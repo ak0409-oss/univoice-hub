@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <h2>Manage Students</h2>
+    <a href="{{ url_for('main.admin_dashboard') }}">&larr; Back</a>
+</div>
+
+<div style="background: #eef; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+    <form method="GET">
+        <label><strong>Select Hostel to View Students:</strong></label>
+        <select name="hostel_id" onchange="this.form.submit()" style="padding: 5px;">
+            <option value="">-- Choose Hostel --</option>
+            {% for h in hostels %}
+                <option value="{{ h.id }}" {% if selected_hostel and selected_hostel.id == h.id %}selected{% endif %}>
+                    {{ h.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+
+<div style="display: flex; gap: 20px;">
+
+    <div style="flex: 2;">
+        {% if selected_hostel %}
+            <h3>Students in {{ selected_hostel.name }}</h3>
+            {% if not students %}
+                <p>No students found in this hostel.</p>
+            {% else %}
+                <table border="1" style="width: 100%; border-collapse: collapse;">
+                    <thead style="background: #333; color: white;">
+                        <tr>
+                            <th>Room</th>
+                            <th>Name</th>
+                            <th>Mentor</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in students %}
+                        <tr>
+                            <td>{{ s.room_number or 'N/A' }}</td>
+                            <td>{{ s.name }}</td>
+                            <td>{{ s.mentor.name if s.mentor else '-' }}</td>
+                            <td>
+                                <a href="{{ url_for('main.admin_student_profile', user_id=s.id) }}" style="color: blue; font-weight: bold;">View Profile</a> |
+                                <a href="{{ url_for('main.edit_user', user_id=s.id) }}">Edit</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        {% else %}
+            <p>Please select a hostel above to see the student list.</p>
+        {% endif %}
+    </div>
+
+    <div style="flex: 1; border: 1px solid #ccc; padding: 15px; background: #f9f9f9; height: fit-content;">
+        <h4 style="margin-top: 0;">Add New Student</h4>
+        <form method="POST">
+            <input type="email" name="email" placeholder="Email" required style="width: 100%; margin-bottom: 10px;">
+            <input type="text" name="name" placeholder="Full Name" required style="width: 100%; margin-bottom: 10px;">
+            <input type="password" name="password" placeholder="Password" required style="width: 100%; margin-bottom: 10px;">
+            <input type="text" name="room_number" placeholder="Room Number" style="width: 100%; margin-bottom: 10px;">
+            
+            <label>Hostel:</label>
+            <select name="hostel_id" required style="width: 100%; margin-bottom: 10px;">
+                {% for h in hostels %}
+                    <option value="{{ h.id }}" {% if selected_hostel and selected_hostel.id == h.id %}selected{% endif %}>{{ h.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label>Mentor:</label>
+            <select name="mentor_id" style="width: 100%; margin-bottom: 10px;">
+                <option value="">-- Assign Mentor --</option>
+                {% for m in mentors %}
+                    <option value="{{ m.id }}">{{ m.name }}</option>
+                {% endfor %}
+            </select>
+            
+            <button type="submit" style="width: 100%; background: blue; color: white; border: none; padding: 8px;">Create Student</button>
+        </form>
+    </div>
+
+</div>
+{% endblock %}

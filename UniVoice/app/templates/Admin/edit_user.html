@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Edit User: {{ user.name }}</h2>
+<div style="border: 1px solid #ccc; padding: 20px; max-width: 500px;">
+    <form method="POST">
+        <label>Name</label>
+        <input type="text" name="name" value="{{ user.name }}" required>
+
+        <label>Email</label>
+        <input type="email" name="email" value="{{ user.email }}" required>
+
+        <label>Assigned Hostel (Students/Wardens)</label>
+        <select name="hostel_id">
+            <option value="">-- None --</option>
+            {% for h in hostels %}
+                <option value="{{ h.id }}" {% if user.hostel_id == h.id %}selected{% endif %}>
+                    {{ h.name }}
+                </option>
+            {% endfor %}
+        </select>
+
+        {% if user.role.value == 'student' %}
+            <label>Assigned Mentor (Students Only)</label>
+            <select name="mentor_id">
+                <option value="">-- None --</option>
+                {% for m in mentors %}
+                    <option value="{{ m.id }}" {% if user.mentor_id == m.id %}selected{% endif %}>
+                        {{ m.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        {% endif %}
+
+        <div style="margin-top: 20px;">
+            <button type="submit" style="background: green; color: white; padding: 10px 20px; border: none;">Save Changes</button>
+            <a href="{{ url_for('main.admin_dashboard') }}" style="margin-left: 10px;">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
