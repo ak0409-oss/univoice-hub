@@ -5,12 +5,11 @@
   "type": "module",
   "workspaces": ["univoice-frontend"],
   "scripts": {
-    "dev": "npm --prefix univoice-frontend run dev",
-    "build": "npm --prefix univoice-frontend run build",
-    "build:dev": "npm --prefix univoice-frontend run build:dev",
-    "lint": "npm --prefix univoice-frontend run lint",
-    "preview": "npm --prefix univoice-frontend run preview",
-    "test": "npm --prefix univoice-frontend run test",
-    "test:watch": "npm --prefix univoice-frontend run test:watch"
-  }
+  "dev": "vite",
+  "build": "vite build",
+  "preview": "vite preview",
+  "lint": "eslint .",
+  "test": "vitest run",
+  "test:watch": "vitest"
+}
 }
