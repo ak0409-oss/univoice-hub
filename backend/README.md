@@ -1,8 +1,26 @@
-# Backend (Archived)
+# Backend
 
-This folder contains the archived backend portions of the UniVoice project.
+This folder contains the backend services for UniVoice Hub.
 
-- Purpose: keep this repository **frontend-only** while preserving backend code for reference.
-- Status: not wired to the frontend build/deploy pipeline in this repo.
+## UniVoice
 
-If/when the backend is revived, consider moving it into its own repository.
+The UniVoice backend has been moved to `backend/UniVoice/`.
+
+### Run locally
+
+From repo root:
+
+```bash
+cd backend/UniVoice
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+python run.py
+```
+
+### Docker
+
+```bash
+cd backend/UniVoice
+docker compose up --build
+```
